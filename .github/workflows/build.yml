@@ -1,0 +1,30 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install Android Workload
+        run: dotnet workload install android
+
+      - name: Build APK
+        run: dotnet build GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj -c Release
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: GalaxyBudsClient-APK
+          path: GalaxyBudsClient.Android/bin/Release/*/*-Signed.apk
+          
