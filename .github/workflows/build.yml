@@ -25,11 +25,22 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
+      - name: Force .NET 8 SDK
+        run: dotnet new globaljson --sdk-version 8.0.400 --force
+
       - name: Install Android Workload
         run: dotnet workload install android
 
-      - name: Build APK
-        run: dotnet publish GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj -c Release -p:AndroidPackageFormat=apk -p:AndroidKeyStore=false -p:TreatWarningsAsErrors=false
+      - name: Publish APK
+        run: |
+          dotnet publish GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj \
+            -c Release \
+            -f net8.0-android \
+            -m:1 \
+            -p:UseSharedCompilation=false \
+            -p:AndroidPackageFormat=apk \
+            -p:AndroidKeyStore=false \
+            -p:TreatWarningsAsErrors=false
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
