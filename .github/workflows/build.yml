@@ -27,8 +27,13 @@ jobs:
       - name: Install Android Workload
         run: dotnet workload install android
 
-      - name: Build APK
-        run: dotnet build GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj -c Debug /p:WarnAsError=false /p:NoWarn=NU1901,NU1902,NU1903,NU1904
+      - name: Publish APK
+        run: |
+          dotnet publish GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj \
+            -c Release \
+            /p:AndroidPackageFormat=apk \
+            /p:WarnAsError=false \
+            /p:NoWarn=NU1901,NU1902,NU1903,NU1904,NU1905
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
