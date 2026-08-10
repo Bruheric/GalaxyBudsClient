@@ -27,12 +27,16 @@ jobs:
       - name: Install Android Workload
         run: dotnet workload install android
 
-      - name: Build APK (Debug / Unsigned)
-        run: dotnet build GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj -c Debug
+      - name: Restore Dependencies
+        run: dotnet restore GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj
+
+      - name: Build APK
+        run: dotnet build GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj -c Debug -f net8.0-android
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: GalaxyBudsClient-APK
+          path: '**/*.apk'
           path: GalaxyBudsClient.Android/bin/Debug/*/*-Signed.apk
           
