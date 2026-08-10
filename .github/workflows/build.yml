@@ -10,6 +10,14 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -19,12 +27,12 @@ jobs:
       - name: Install Android Workload
         run: dotnet workload install android
 
-      - name: Build APK
-        run: dotnet build GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj -c Release
+      - name: Build APK (Debug / Unsigned)
+        run: dotnet build GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj -c Debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: GalaxyBudsClient-APK
-          path: GalaxyBudsClient.Android/bin/Release/*/*-Signed.apk
+          path: GalaxyBudsClient.Android/bin/Debug/*/*-Signed.apk
           
