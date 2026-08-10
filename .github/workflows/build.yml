@@ -24,13 +24,14 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install Android Workload
-        run: dotnet workload install android
+      - name: Install Android Workloads
+        run: dotnet workload install android maui-android
 
-      - name: Publish APK
+      - name: Build APK
         run: |
-          dotnet publish GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj \
-            -c Release \
+          dotnet build GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj \
+            -c Debug \
+            -f net8.0-android \
             /p:AndroidPackageFormat=apk \
             /p:WarnAsError=false \
             /p:NoWarn=NU1901,NU1902,NU1903,NU1904,NU1905
