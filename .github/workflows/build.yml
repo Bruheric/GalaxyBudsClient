@@ -5,6 +5,7 @@ on:
 
 jobs:
   build:
+    name: Build Android App
     runs-on: ubuntu-latest
 
     steps:
@@ -13,30 +14,31 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup Java
+      - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup .NET
+      - name: Setup .NET 8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
       - name: Install Android Workloads
-        run: dotnet workload install android maui-android
+        run: dotnet workload install android
 
-      - name: Build APK
+      - name: Publish APK
         run: |
-          dotnet build GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj \
-            -c Debug \
+          dotnet publish GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj \
+            -c Release \
             -f net8.0-android \
             /p:AndroidPackageFormat=apk \
-            /p:WarnAsError=false \
-            /p:NoWarn=NU1901,NU1902,NU1903,NU1904,NU1905
+            /p:AndroidKeyStore=false \
+            /p:TreatWarningsAsErrors=false \
+            /p:MSBuildWarningsAsMessages=NU1901,NU1902,NU1903,NU1904,NU1905
 
-      - name: Upload APK
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: GalaxyBudsClient-APK
