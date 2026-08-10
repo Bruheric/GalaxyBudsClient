@@ -20,24 +20,24 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Setup .NET 8
+      - name: Setup .NET SDKs
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
-
-      - name: Force .NET 8 SDK
-        run: dotnet new globaljson --sdk-version 8.0.400 --force
+          dotnet-version: |
+            8.0.x
+            9.0.x
 
       - name: Install Android Workload
         run: dotnet workload install android
+
+      - name: Restore Dependencies
+        run: dotnet restore GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj
 
       - name: Publish APK
         run: |
           dotnet publish GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj \
             -c Release \
-            -f net8.0-android \
             -m:1 \
-            -p:UseSharedCompilation=false \
             -p:AndroidPackageFormat=apk \
             -p:AndroidKeyStore=false \
             -p:TreatWarningsAsErrors=false
