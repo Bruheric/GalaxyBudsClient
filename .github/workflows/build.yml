@@ -28,28 +28,12 @@ jobs:
       - name: Install Android Workload
         run: dotnet workload install android
 
-      - name: Build APK & Capture Log
-        run: |
-          export ANDROID_HOME=$ANDROID_SDK_ROOT
-          dotnet publish GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj \
-            -c Release \
-            -p:AndroidPackageFormat=apk \
-            -p:AndroidKeyStore=false \
-            -p:TreatWarningsAsErrors=false \
-            -p:NoWarn="NU1901;NU1902;NU1903;NU1904;NU1905" \
-            > build_log.txt 2>&1 || (cat build_log.txt && exit 1)
+      - name: Build APK
+        run: dotnet publish GalaxyBudsClient.Android/GalaxyBudsClient.Android.csproj -c Release -p:AndroidPackageFormat=apk -p:AndroidKeyStore=false -p:TreatWarningsAsErrors=false
 
       - name: Upload APK
-        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: GalaxyBudsClient-APK
           path: '**/*.apk'
-
-      - name: Upload Error Log
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-error-log
-          path: build_log.txt
           
